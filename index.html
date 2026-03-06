@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IT Ticket Portal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: { DEFAULT: '#7B9669', light: '#BAC8B1', dark: '#404E3B' },
+            secondary: '#6C8480',
+            jade: { light: '#E6E6E6', muted: '#BAC8B1', forest: '#404E3B' }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-[#F5F7F3] to-[#E8EDE6] dark:from-[#2d3a2e] dark:to-[#404E3B] transition-colors duration-300">
+  <div class="min-h-screen flex flex-col">
+    <header class="bg-white/80 dark:bg-[#1f2620]/80 backdrop-blur-sm border-b border-primary/20 dark:border-primary/10 transition-colors duration-300">
+      <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+        <div>
+          <h1 class="text-3xl font-bold text-primary tracking-tight">Tickets Management System</h1>
+          <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Create and manage tickets for your IT needs</p>
+        </div>
+        
+        <label class="relative inline-flex items-center cursor-pointer group">
+          <input id="dark-mode-toggle" type="checkbox" class="sr-only peer" />
+          <div class="w-14 h-7 bg-gray-300 dark:bg-gray-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/30 rounded-full peer transition-all duration-300 peer-checked:after:translate-x-7 after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-6 after:w-6 after:transition-all"></div>
+          <span class="ml-3 text-sm font-medium text-gray-700 dark:text-gray-300 group-hover:text-primary transition-colors">
+          </span>
+        </label>
+      </div>
+    </header>
+
+    <main class="flex-1 max-w-7xl mx-auto px-6 py-12 w-full">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        
+        <div class="bg-white dark:bg_gray-800 rounded-2xl shadow-lg dark:shadow-xl border border-gray-200 dark:border-gray-700 p-8 transition-all duration-300 hover:shadow-xl dark:hover:shadow-2xl">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-12 h-12 bg-primary/10 dark:bg-primary/20 rounded-xl flex items-center justify-center">
+              <span class="text-2xl">👤</span>
+            </div>
+            <div>
+              <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Client</h2>
+              <p class="text-sm text-gray-600 dark:text-gray-400">Create an account to submit and track your IT tickets</p>
+            </div>
+          </div>
+
+          <div class="space-y-3 mb-6">
+            <a href="user_page.html"
+               class="block w-full px-4 py-3 rounded-lg bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-white font-semibold transition-all duration-300 transform hover:scale-105 text-center shadow-md hover:shadow-lg">
+              ✓ Client Login
+            </a>
+            <a href="register.html?mode=user"
+               class="block w-full px-4 py-3 rounded-lg bg-primary/10 dark:bg-primary/20 hover:bg-primary/20 dark:hover:bg-primary/30 text-primary dark:text-primary font-semibold transition-all duration-300 text-center border-2 border-primary/30 hover:border-primary/60">
+              + Create Account
+            </a>
+          </div>
+
+          <div class="pt-6 border-t border-gray-200 dark:border-gray-700">
+            <p class="text-xs text-gray-600 dark:text-gray-400 text-center">
+               Create an account to submit and track your IT tickets
+            </p>
+          </div>
+        </div>
+
+        <div class="bg-white/60 dark:bg-[#3a4936]/60 backdrop-blur-sm rounded-2xl shadow-lg dark:shadow-xl border border-primary/20 dark:border-primary/10 p-8 transition-all duration-300 hover:shadow-xl dark:hover:shadow-2xl hover:border-primary/40 dark:hover:border-primary/20">
+          <div class="flex items-center gap-3 mb-6">
+            <div class="w-12 h-12 bg-secondary/10 dark:bg-secondary/20 rounded-xl flex items-center justify-center">
+              <span class="text-2xl">🔐</span>
+            </div>
+            <div>
+              <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Admin</h2>
+              <p class="text-sm text-gray-600 dark:text-gray-400">Manage and resolve tickets</p>
+            </div>
+          </div>
+
+          <div class="space-y-3 mb-6">
+            <a href="admin_page.html"
+               class="block w-full px-4 py-3 rounded-lg bg-gradient-to-r from-secondary to-secondary/80 hover:from-secondary/90 hover:to-secondary/70 text-white font-semibold transition-all duration-300 transform hover:scale-105 text-center shadow-md hover:shadow-lg">
+              ✓ Admin Login
+            </a>
+            <button id="admin-register-btn"
+                    class="w-full px-4 py-3 rounded-lg bg-secondary/10 dark:bg-secondary/20 hover:bg-secondary/20 dark:hover:bg-secondary/30 text-secondary dark:text-secondary font-semibold transition-all duration-300 border-2 border-secondary/30 hover:border-secondary/60">
+              + Create Admin Account
+            </button>
+          </div>
+
+          <div id="admin-warning" class="hidden mb-4 p-3 bg-secondary/10 dark:bg-secondary/20 border border-secondary/50 dark:border-secondary/40 rounded-lg">
+            <p class="text-sm text-secondary/90 dark:text-secondary/80 font-semibold">
+              ⚠️ Limit reached: Maximum 3 admin accounts allowed.
+            </p>
+          </div>
+
+          <div class="pt-6 border-t border-gray-200 dark:border-gray-700">
+            <p class="text-xs text-gray-600 dark:text-gray-400 text-center">
+                Only 3 admin accounts can be created to ensure security
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-12 bg-gradient-to-r from-primary/5 to-secondary/5 dark:from-primary/10 dark:to-secondary/10 rounded-2xl p-8 border border-primary/20 dark:border-primary/15">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <h3 class="font-semibold text-primary dark:text-primary mb-2"> Project developed by: Nicorici Ioan</h3>
+            <p class="text-sm text-gray-700 dark:text-gray-300">
+              <span class="font-mono bg-primary/10 dark:bg-primary/20 text-primary dark:text-primary px-2 py-1 rounded text-xs">Main goal: IT ticket management</span>
+            </p>
+          </div>
+          <div>
+            <h3 class="font-semibold text-primary dark:text-primary mb-2"> Sections: Maintenance Company, Client</h3>
+            <p class="text-sm text-gray-700 dark:text-gray-300">
+              <span class="font-mono bg-primary/10 dark:bg-primary/20 text-primary dark:text-primary px-2 py-1 rounded text-xs">Technologies used: HTML, TailwindCSS, JavaScript, Supabase</span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="bg-white/60 dark:bg-[#1f2620]/60 backdrop-blur-sm border-t border-primary/20 dark:border-primary/10 mt-12 transition-colors duration-300">
+      <div class="max-w-7xl mx-auto px-6 py-6 text-center text-sm text-gray-600 dark:text-gray-400">
+        <p>© 2026 Ticket Management System. All rights reserved.</p>
+      </div>
+    </footer>
+  </div>
+
+  <script type="module">
+    import { initDarkMode } from './theme.js';
+    
+    initDarkMode();
+
+    // Admin Register Button
+    document.getElementById('admin-register-btn').addEventListener('click', async () => {
+      // Check admin count
+      try {
+        const { initSupabase } = await import('./supabaseClient.js');
+        const supabase = (await import('./supabaseClient.js')).supabase;
+        
+        const { count } = await supabase
+          .from('profiles')
+          .select('id', { count: 'exact', head: true })
+          .eq('role', 'admin');
+        
+        if (count && count >= 3) {
+          document.getElementById('admin-warning').classList.remove('hidden');
+          return;
+        }
+        
+        window.location.href = 'register.html?mode=admin';
+      } catch (err) {
+        console.error('Error checking admin count:', err);
+        window.location.href = 'register.html?mode=admin';
+      }
+    });
+
+    // Check admin count on page load
+    async function checkAdminCount() {
+      try {
+        const { supabase } = await import('./supabaseClient.js');
+        const { count } = await supabase
+          .from('profiles')
+          .select('id', { count: 'exact', head: true })
+          .eq('role', 'admin');
+        
+        if (count && count >= 3) {
+          document.getElementById('admin-register-btn').disabled = true;
+          document.getElementById('admin-register-btn').classList.add('opacity-50', 'cursor-not-allowed');
+          document.getElementById('admin-warning').classList.remove('hidden');
+        }
+      } catch (err) {
+        console.error('Error checking admin count:', err);
+      }
+    }
+
+    checkAdminCount();
+  </script>
+</body>
+</html>

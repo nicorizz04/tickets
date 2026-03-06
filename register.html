@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>User Registration</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: { DEFAULT: '#7B9669', light: '#BAC8B1', dark: '#404E3B' },
+            secondary: '#6C8480',
+            jade: { light: '#E6E6E6', muted: '#BAC8B1', forest: '#404E3B' }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-[#F5F7F3] to-[#E8EDE6] dark:from-[#2d3a2e] dark:to-[#404E3B] flex items-center justify-center p-6 transition-colors duration-300">
+  <div class="w-full max-w-lg bg-white/60 dark:bg-[#3a4936]/60 backdrop-blur-sm rounded-2xl shadow-lg dark:shadow-xl border border-primary/20 dark:border-primary/10 p-8">
+    <div class="flex items-center justify-between mb-6">
+      <div>
+        <h1 id="page-title" class="text-2xl font-bold text-gray-900 dark:text-white tracking-tight">Create Account</h1>
+        <p id="page-subtitle" class="text-sm text-gray-600 dark:text-gray-400 mt-1">Sign up to access the portal</p>
+      </div>
+      
+      <label class="relative inline-flex items-center cursor-pointer">
+        <input id="dark-mode-toggle" type="checkbox" class="sr-only peer" />
+        <div class="w-11 h-6 bg-primary/20 dark:bg-primary/40 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/30 rounded-full peer transition-all duration-300 peer-checked:after:translate-x-5 after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+      </label>
+    </div>
+
+    <form id="register-form" class="space-y-4">
+      <div>
+        <label for="register-name" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Full Name</label>
+        <input
+          id="register-name"
+          type="text"
+          required
+          placeholder="Enter your full name"
+          class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all duration-300"
+        />
+      </div>
+
+      <div>
+        <label for="register-email" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Email</label>
+        <input
+          id="register-email"
+          type="email"
+          required
+          placeholder="exemple@email.com"
+          class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all duration-300"
+        />
+      </div>
+
+      <div>
+        <label for="register-password" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Password</label>
+        <input
+          id="register-password"
+          type="password"
+          required
+          placeholder="Minimum 8 characters"
+          class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all duration-300"
+        />
+      </div>
+
+      <div>
+        <label for="register-password-confirm" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Confirm Password</label>
+        <input
+          id="register-password-confirm"
+          type="password"
+          required
+          placeholder="Confirm password"
+          class="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all duration-300"
+        />
+      </div>
+
+      <div id="admin-section" class="hidden">
+        <div class="my-6 p-4 bg-secondary/10 dark:bg-secondary/20 border border-secondary/50 dark:border-secondary/40 rounded-lg">
+          <p class="text-sm text-secondary dark:text-secondary font-semibold">🔐 Mode: Administrator</p>
+        </div>
+
+        <div>
+          <label for="register-admin-key" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Admin Secret Code</label>
+          <input
+            id="register-admin-key"
+            type="password"
+            placeholder="Enter admin code"
+            class="w-full px-4 py-2.5 border border-primary/30 dark:border-primary/20 bg-white dark:bg-[#3a4936]/30 dark:text-white rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all duration-300"
+          />
+        </div>
+      </div>
+
+      <button
+        type="submit"
+        id="submit-btn"
+        class="w-full mt-6 px-4 py-3 rounded-lg bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-white font-semibold transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg"
+      >
+        Register
+      </button>
+    </form>
+
+    <div id="register-message" class="mt-4 text-sm text-center"></div>
+
+    <div class="mt-6 text-center pt-6 border-t border-primary/20 dark:border-primary/10">
+      <p class="text-sm text-gray-600 dark:text-gray-400">
+        Already have an account?
+        <span id="login-link-client" class="text-primary font-semibold hover:underline cursor-pointer">Sign in</span>
+        <span id="login-link-admin" class="hidden text-secondary font-semibold hover:underline cursor-pointer">Sign in</span>
+      </p>
+    </div>
+
+    <div class="mt-4 text-center text-sm">
+      <a href="index.html" class="text-gray-600 dark:text-gray-400 hover:text-primary transition-colors">← Back to Home</a>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initDarkMode } from './theme.js';
+    import('./register.js');
+    initDarkMode();
+  </script>
+</body>
+</html>

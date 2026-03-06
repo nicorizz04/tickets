@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticket Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            DEFAULT: '#07306E',
+                            light: 'blue-600',
+                            dark: '#051d42',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 min-h-screen flex">
+    <aside class="w-56 bg-[#07306E] text-white flex flex-col min-h-screen shrink-0">
+        <div class="p-6 border-b border-white/10">
+            <h2 class="text-xl font-semibold tracking-tight">IT Tickets</h2>
+            <p class="text-sm text-white/70 mt-0.5">Support</p>
+        </div>
+        <nav class="flex-1 p-4 space-y-1">
+            <button type="button" class="sidebar-btn w-full text-left px-4 py-3 rounded-lg bg-white/15 text-white font-medium transition hover:bg-white/25" data-filter="all">
+                All Tickets
+            </button>
+            <button type="button" class="sidebar-btn w-full text-left px-4 py-3 rounded-lg text-white/80 hover:bg-white/10 transition" data-filter="hardware">
+                Hardware
+            </button>
+            <button type="button" class="sidebar-btn w-full text-left px-4 py-3 rounded-lg text-white/80 hover:bg-white/10 transition" data-filter="software">
+                Software
+            </button>
+        </nav>
+    </aside>
+
+    <main class="flex-1 flex flex-col min-h-screen overflow-auto">
+        <header class="bg-white border-b border-gray-200 px-8 py-4 flex items-center justify-between shrink-0">
+            <h1 class="text-xl font-semibold text-gray-800">Dashboard</h1>
+            <button type="button" id="open-modal" class="px-6 py-3 bg-[#07306E] text-white font-medium rounded-lg shadow-md hover:bg-[#051d42] transition focus:outline-none focus:ring-2 focus:ring-[#07306E] focus:ring-offset-2">
+                Create New Ticket
+            </button>
+        </header>
+
+        <section class="px-8 py-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+                <p class="text-sm font-medium text-gray-500 uppercase tracking-wide">Total</p>
+                <p class="text-2xl font-bold text-[#07306E] mt-1" id="stat-total">24</p>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+                <p class="text-sm font-medium text-gray-500 uppercase tracking-wide">Pending</p>
+                <p class="text-2xl font-bold text-amber-600 mt-1" id="stat-pending">8</p>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+                <p class="text-sm font-medium text-gray-500 uppercase tracking-wide">Completed</p>
+                <p class="text-2xl font-bold text-emerald-600 mt-1" id="stat-completed">16</p>
+            </div>
+        </section>
+
+        <section class="px-8 pb-8 flex-1">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead class="bg-gray-50 border-b border-gray-200">
+                            <tr>
+                                <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">ID</th>
+                                <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Description</th>
+                                <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Category</th>
+                                <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
+                                <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider cursor-pointer" id="th-priority">
+                                Priority <span id="priority-sort-indicator" class="ml-1"></span>
+                            </th>
+                                <th class="px-6 py-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">Data</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tickets-tbody" class="divide-y divide-gray-100">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="modal" class="fixed inset-0 z-50 hidden" aria-hidden="true">
+        <div class="fixed inset-0 bg-black/50 transition-opacity" id="modal-backdrop"></div>
+        <div class="fixed inset-0 flex items-center justify-center p-4">
+            <div class="bg-white rounded-xl shadow-xl max-w-lg w-full max-h-[90vh] overflow-y-auto" id="modal-content">
+                <div class="p-6 border-b border-gray-200">
+                    <h3 class="text-lg font-semibold text-gray-900">Create Ticket</h3>
+                </div>
+                <form id="ticket-form" class="p-6 space-y-4">
+                    <div>
+                        <label for="ticket-client-name" class="block text-sm font-medium text-gray-700 mb-1">Client name</label>
+                        <input type="text" id="ticket-client-name" name="client_name" placeholder="Client Name" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#07306E] focus:border-[#07306E] outline-none">
+                    </div>
+                    <div>
+                        <label for="ticket-device-name" class="block text-sm font-medium text-gray-700 mb-1">Device</label>
+                        <input type="text" id="ticket-device-name" name="device_name" placeholder="Ex: Laptop Dell, Monitor LG" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#07306E] focus:border-[#07306E] outline-none">
+                    </div>
+                    <div>
+                        <label for="ticket-category" class="block text-sm font-medium text-gray-700 mb-1">Category</label>
+                        <select id="ticket-category" name="category" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#07306E] focus:border-[#07306E] outline-none">
+                            <option value="Software">Software</option>
+                            <option value="Hardware">Hardware</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="ticket-priority" class="block text-sm font-medium text-gray-700 mb-1">Priority</label>
+                        <select id="ticket-priority" name="priority" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#07306E] focus:border-[#07306E] outline-none">
+                            <option value="Low">Low</option>
+                            <option value="Medium">Medium</option>
+                            <option value="High">High</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="ticket-description" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                        <textarea id="ticket-description" name="description" rows="4" placeholder="Details about the issue..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#07306E] focus:border-[#07306E] outline-none resize-none"></textarea>
+                    </div>
+                </form>
+                <div class="p-6 border-t border-gray-200 flex justify-end gap-3">
+                    <button type="button" id="close-modal" class="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition">Cancel</button>
+                    <button type="button" id="submit-ticket" class="px-4 py-2 bg-[#07306E] text-white font-medium rounded-lg hover:bg-[#051d42] transition">Save Ticket</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
